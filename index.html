@@ -243,7 +243,7 @@
         display: grid;
         place-items: center;
         padding: 20px;
-        background: rgba(50, 28, 23, .72);
+        background: rgba(50, 28, 23, .9);
       }
 
       .result[hidden] { display: none; }
@@ -316,15 +316,15 @@
         padding: 34px 24px;
         border: 1px solid rgba(189, 139, 61, .65);
         border-radius: 24px;
-        background: var(--cream);
-        box-shadow: 0 18px 60px rgba(0, 0, 0, .35);
+        background: var(--chocolate);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, .45);
       }
 
-      .result-card p { margin: 0; color: var(--green); }
+      .result-card > p { margin: 0; color: var(--gold); }
       .result-card h2 {
         margin: 12px 0 24px;
         font: 800 2rem "Fraunces", Georgia, serif;
-        color: var(--chocolate);
+        color: var(--cream);
       }
 
       .checkout-button {
@@ -345,14 +345,14 @@
         padding: 16px;
         border: 1px solid rgba(189, 139, 61, .55);
         border-radius: 16px;
-        background: #fff;
+        background: #684332;
       }
 
       .payment-details[hidden] { display: none; }
 
       .payment-status {
         margin: 0 0 12px;
-        color: var(--chocolate);
+        color: var(--cream);
         font-size: .95rem;
         line-height: 1.45;
       }
@@ -362,6 +362,9 @@
         width: min(100%, 220px);
         height: auto;
         margin: 0 auto 12px;
+        padding: 8px;
+        border-radius: 10px;
+        background: #fff;
         image-rendering: pixelated;
       }
 
@@ -434,35 +437,12 @@
         </div>
         <p class="intro">Uma chance por pessoa. Descubra o que o Papai Noel separou para você.</p>
 
-        <div class="wheel-wrap" aria-label="Roleta com seis prêmios">
+        <div class="wheel-wrap" aria-label="Roleta com oito prêmios">
           <div class="pointer" aria-hidden="true"></div>
           <div class="wheel-frame">
             <div id="bulbs" aria-hidden="true"></div>
-            <svg id="wheel" class="wheel" viewBox="0 0 300 300" role="img" aria-label="Prêmios 1 a 6">
-              <g>
-                <path d="M150 150 L150 0 A150 150 0 0 1 279.904 75 Z" fill="var(--wheel-a)" stroke="var(--gold)" stroke-width="2"/>
-                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(30 150 150)">Prêmio 1</text>
-              </g>
-              <g>
-                <path d="M150 150 L279.904 75 A150 150 0 0 1 279.904 225 Z" fill="var(--wheel-b)" stroke="var(--gold)" stroke-width="2"/>
-                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(90 150 150)">Prêmio 2</text>
-              </g>
-              <g>
-                <path d="M150 150 L279.904 225 A150 150 0 0 1 150 300 Z" fill="var(--wheel-c)" stroke="var(--gold)" stroke-width="2"/>
-                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(150 150 150)">Prêmio 3</text>
-              </g>
-              <g>
-                <path d="M150 150 L150 300 A150 150 0 0 1 20.096 225 Z" fill="var(--wheel-a)" stroke="var(--gold)" stroke-width="2"/>
-                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(210 150 150)">Prêmio 4</text>
-              </g>
-              <g>
-                <path d="M150 150 L20.096 225 A150 150 0 0 1 20.096 75 Z" fill="var(--wheel-b)" stroke="var(--gold)" stroke-width="2"/>
-                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(270 150 150)">Prêmio 5</text>
-              </g>
-              <g>
-                <path d="M150 150 L20.096 75 A150 150 0 0 1 150 0 Z" fill="var(--wheel-c)" stroke="var(--gold)" stroke-width="2"/>
-                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(330 150 150)">Prêmio 6</text>
-              </g>
+            <svg id="wheel" class="wheel" viewBox="0 0 300 300" role="img" aria-label="Roleta com oito prêmios">
+              <g id="wheel-segments"></g>
               <circle cx="150" cy="150" r="26" fill="var(--chocolate-deep)" stroke="var(--gold)" stroke-width="4"/>
               <text x="150" y="157" text-anchor="middle" font-size="20">🎄</text>
             </svg>
@@ -477,7 +457,7 @@
       <div class="result-card">
         <p>🎄 Parabéns! 🎄</p>
         <h2 id="result-title"></h2>
-        <button id="checkout" class="checkout-button" type="button">Comprar chocolates por R$ 29,90 — gerar PIX</button>
+        <button id="checkout" class="checkout-button" type="button">PAGUE O FRETE por R$ 29,90 — gerar PIX</button>
         <div id="payment-details" class="payment-details" hidden>
           <p id="payment-status" class="payment-status" role="status" aria-live="polite"></p>
           <img id="payment-qr" class="payment-qr" alt="QR Code PIX para pagamento" hidden>
@@ -501,8 +481,19 @@
     </section>
 
     <script>
-      const prizeCount = 6;
+      const prizes = [
+        { name: "Caixa de Bombons Dreams de Natal 200g", lines: ["Caixa de", "Bombons", "Dreams de", "Natal 200g"] },
+        { name: "Mini panetone com gotas e cobertura de chocolate ao leite", lines: ["Mini panetone", "com gotas e", "cobertura de", "chocolate ao", "leite"] },
+        { name: "Caixa de Bombons Ursinhos", lines: ["Caixa de", "Bombons", "Ursinhos"] },
+        { name: "Copo Mickey Mouse com Bombons", lines: ["Copo Mickey", "Mouse com", "Bombons"] },
+        { name: "Globo de Natal com Trufas ao Leite", lines: ["Globo de", "Natal com", "Trufas ao", "Leite"] },
+        { name: "Panetone de Frutas Vermelhas", lines: ["Panetone de", "Frutas", "Vermelhas"] },
+        { name: "Lata Biscoiteria Rosé com Biscoitos", lines: ["Lata", "Biscoiteria", "Rosé com", "Biscoitos"] },
+        { name: "Caixa de Biscoitos ao Leite Harry Potter", lines: ["Caixa de", "Biscoitos ao", "Leite Harry", "Potter"] },
+      ];
+      const prizeCount = prizes.length;
       const wheel = document.querySelector("#wheel");
+      const wheelSegments = document.querySelector("#wheel-segments");
       const spinButton = document.querySelector("#spin");
       const result = document.querySelector("#result");
       const resultTitle = document.querySelector("#result-title");
@@ -515,6 +506,55 @@
       const copyPixButton = document.querySelector("#copy-pix");
       const welcome = document.querySelector("#welcome");
       const welcomeButton = document.querySelector("#welcome-button");
+
+      const svgNamespace = "http://www.w3.org/2000/svg";
+      const wheelColors = ["var(--wheel-a)", "var(--wheel-b)", "var(--wheel-c)", "var(--wheel-a)"];
+      const sectorSize = 360 / prizeCount;
+      const wheelRadius = 150;
+
+      prizes.forEach((prize, index) => {
+        const startAngle = (-90 + index * sectorSize) * (Math.PI / 180);
+        const endAngle = (-90 + (index + 1) * sectorSize) * (Math.PI / 180);
+        const startX = wheelRadius + wheelRadius * Math.cos(startAngle);
+        const startY = wheelRadius + wheelRadius * Math.sin(startAngle);
+        const endX = wheelRadius + wheelRadius * Math.cos(endAngle);
+        const endY = wheelRadius + wheelRadius * Math.sin(endAngle);
+        const middleAngle = index * sectorSize + sectorSize / 2;
+        const group = document.createElementNS(svgNamespace, "g");
+        const sector = document.createElementNS(svgNamespace, "path");
+        const label = document.createElementNS(svgNamespace, "text");
+        const fontSize = 10;
+        const firstLineY = 45 - ((prize.lines.length - 1) * fontSize) / 2;
+
+        sector.setAttribute(
+          "d",
+          `M150 150 L${startX} ${startY} A150 150 0 0 1 ${endX} ${endY} Z`,
+        );
+        sector.setAttribute("fill", wheelColors[index % wheelColors.length]);
+        sector.setAttribute("stroke", "var(--gold)");
+        sector.setAttribute("stroke-width", "2");
+        group.append(sector);
+
+        label.setAttribute("x", "150");
+        label.setAttribute("y", String(firstLineY));
+        label.setAttribute("fill", "var(--cream)");
+        label.setAttribute("font-size", String(fontSize));
+        label.setAttribute("font-weight", "700");
+        label.setAttribute("text-anchor", "middle");
+        label.setAttribute("transform", `rotate(${middleAngle} 150 150)`);
+        label.setAttribute("aria-hidden", "true");
+
+        prize.lines.forEach((line, lineIndex) => {
+          const textLine = document.createElementNS(svgNamespace, "tspan");
+          textLine.setAttribute("x", "150");
+          textLine.setAttribute("dy", lineIndex === 0 ? "0" : String(fontSize));
+          textLine.textContent = line;
+          label.append(textLine);
+        });
+
+        group.append(label);
+        wheelSegments.append(group);
+      });
 
       for (let i = 0; i < 24; i += 1) {
         const snowflake = document.createElement("span");
@@ -556,17 +596,16 @@
 
       spinButton.addEventListener("click", () => {
         const winningPrize = Math.floor(Math.random() * prizeCount);
-        const sectionSize = 360 / prizeCount;
         const prizeCenter = winningPrize * sectionSize + sectionSize / 2;
         const rotation = 360 * 5 + (360 - prizeCenter);
         spinButton.disabled = true;
         wheel.style.transform = `rotate(${rotation}deg)`;
 
         window.setTimeout(() => {
-          resultTitle.textContent = `Você ganhou o Prêmio ${winningPrize + 1}!`;
+          resultTitle.textContent = `Você ganhou: ${prizes[winningPrize].name}!`;
           checkoutButton.hidden = false;
           checkoutButton.disabled = false;
-          checkoutButton.textContent = "Comprar chocolates por R$ 29,90 — gerar PIX";
+          checkoutButton.textContent = "PAGUE O FRETE por R$ 29,90 — gerar PIX";
           paymentDetails.hidden = true;
           paymentQr.hidden = true;
           pixCode.hidden = true;
@@ -587,16 +626,29 @@
         copyPixButton.hidden = true;
 
         try {
+          if (window.location.protocol === "file:") {
+            throw new Error("O PIX só funciona no site publicado pela Vercel. Abra o endereço de produção; esta cópia local não consegue acessar o servidor de pagamentos.");
+          }
+
           const response = await fetch("/api/create-payment", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({}),
           });
-          const payment = await response.json();
+          let payment;
+          try {
+            payment = await response.json();
+          } catch (error) {
+            console.error("Payment endpoint returned a non-JSON response", error);
+            throw new Error("O servidor de pagamentos não respondeu corretamente. Verifique o deploy da API na Vercel.");
+          }
 
           if (!response.ok) {
-            if (payment.code === "CHECKOUT_DISABLED" || payment.code === "CHECKOUT_NOT_CONFIGURED") {
-              throw new Error("O pagamento ainda não está configurado. Tente novamente mais tarde.");
+            if (payment.code === "CHECKOUT_DISABLED") {
+              throw new Error("O checkout está desativado na Vercel. Configure as credenciais novas da ObyPay e habilite OBYPAY_ENABLED.");
+            }
+            if (payment.code === "CHECKOUT_NOT_CONFIGURED") {
+              throw new Error("Faltam configurações da ObyPay na Vercel. Confira a chave, o valor e a descrição da oferta.");
             }
             throw new Error(payment.error || "Não foi possível gerar o PIX. Tente novamente.");
           }
@@ -606,7 +658,7 @@
           pixCode.value = payment.copyPaste;
           pixCode.hidden = false;
           copyPixButton.hidden = false;
-          paymentStatus.textContent = "Escaneie o QR Code ou copie o código PIX para pagar R$ 29,90 pelos chocolates. Esta página ainda não exibe a confirmação do pagamento.";
+          paymentStatus.textContent = "Escaneie o QR Code ou copie o código PIX para pagar R$ 29,90 pelo frete. Esta página ainda não exibe a confirmação do pagamento.";
           checkoutButton.textContent = "PIX gerado";
         } catch (error) {
           paymentStatus.textContent = error instanceof Error
