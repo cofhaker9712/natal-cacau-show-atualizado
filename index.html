@@ -1,0 +1,496 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#4a2b22">
+    <meta name="description" content="Gire a roleta de Natal e descubra seu presente especial.">
+    <title>Roleta de Natal — Gire e ganhe seu presente</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Outfit", sans-serif;
+        --background: #fbf7ef;
+        --cream: #fffaf1;
+        --chocolate: #4a2b22;
+        --chocolate-deep: #321c17;
+        --gold: #bd8b3d;
+        --muted: #755b4d;
+        --red: #9d3038;
+        --green: #315d42;
+        --wheel-a: #684332;
+        --wheel-b: #a5363c;
+        --wheel-c: #315d42;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-width: 320px;
+        min-height: 100vh;
+        margin: 0;
+        overflow-x: hidden;
+        background:
+          radial-gradient(ellipse at 50% 12%, rgba(202, 172, 125, .2), transparent 46%),
+          radial-gradient(ellipse at 8% 90%, rgba(49, 93, 66, .08), transparent 35%),
+          var(--background);
+        color: var(--chocolate);
+      }
+
+      main {
+        position: relative;
+        display: grid;
+        min-height: 100vh;
+        place-items: center;
+        overflow: hidden;
+        padding: 104px 16px 52px;
+      }
+
+      main::before {
+        position: absolute;
+        inset: 0;
+        z-index: 0;
+        background:
+          linear-gradient(rgba(50, 28, 23, .34), rgba(50, 28, 23, .34)),
+          url("fundo imagem cacau show.jfif") center / cover no-repeat;
+        content: "";
+      }
+
+      .brand-logo {
+        position: absolute;
+        top: 18px;
+        left: 22px;
+        z-index: 2;
+        display: block;
+        width: min(150px, 34vw);
+        height: auto;
+        filter: drop-shadow(0 3px 10px rgba(74, 43, 34, .12));
+      }
+
+      .snow {
+        position: absolute;
+        top: -12px;
+        z-index: 0;
+        width: var(--size);
+        height: var(--size);
+        border-radius: 50%;
+        background: rgba(255, 250, 241, .88);
+        box-shadow: 0 0 9px rgba(255, 250, 241, .75);
+        pointer-events: none;
+        animation: snowfall var(--duration) linear var(--delay) infinite;
+      }
+
+      @keyframes snowfall {
+        to { transform: translate3d(24px, 105vh, 0); }
+      }
+
+      .chocolate {
+        position: absolute;
+        top: -48px;
+        left: var(--left);
+        z-index: 0;
+        width: var(--size);
+        height: var(--size);
+        object-fit: contain;
+        pointer-events: none;
+        animation: chocolate-fall var(--duration) linear var(--delay) infinite;
+        filter: drop-shadow(0 3px 3px rgba(50, 28, 23, .35));
+      }
+
+      @keyframes chocolate-fall {
+        to {
+          transform: translate3d(var(--drift), 110vh, 0) rotate(540deg);
+        }
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        width: min(100%, 640px);
+        padding: clamp(28px, 6vw, 48px) clamp(18px, 5vw, 42px) 38px;
+        border: 1px solid rgba(189, 139, 61, .38);
+        border-radius: 30px;
+        background: rgba(74, 43, 34, .96);
+        box-shadow: 0 24px 70px rgba(50, 28, 23, .3);
+        text-align: center;
+      }
+
+      .eyebrow {
+        position: relative;
+        z-index: 1;
+        margin: 0;
+        color: var(--cream);
+        font-size: .875rem;
+        font-weight: 700;
+        letter-spacing: .3em;
+        text-transform: uppercase;
+      }
+
+      .title-panel {
+        position: relative;
+        isolation: isolate;
+        overflow: hidden;
+        padding: clamp(28px, 7vw, 48px) clamp(14px, 4vw, 30px);
+        border: 1px solid rgba(189, 139, 61, .72);
+        border-radius: 22px;
+        background:
+          linear-gradient(90deg, rgba(50, 28, 23, .77), rgba(50, 28, 23, .49)),
+          url("fundo natal-cacau-show.jfif") center 48% / cover no-repeat;
+        box-shadow: inset 0 0 35px rgba(50, 28, 23, .18);
+      }
+
+      h1 {
+        position: relative;
+        z-index: 1;
+        margin: 12px 0 0;
+        font-family: "Fraunces", Georgia, serif;
+        font-size: clamp(2.65rem, 9vw, 4rem);
+        font-weight: 800;
+        line-height: 1.08;
+        color: var(--cream);
+        text-shadow: 0 2px 12px rgba(0, 0, 0, .42);
+      }
+
+      h1 span { color: #f0c66f; }
+
+      .intro {
+        margin: 16px 0 0;
+        color: #f0e4d4;
+        font-size: 1rem;
+        line-height: 1.55;
+      }
+
+      .wheel-wrap {
+        position: relative;
+        width: min(100%, 380px);
+        aspect-ratio: 1;
+        margin: 42px auto 0;
+      }
+
+      .pointer {
+        position: absolute;
+        top: -12px;
+        left: 50%;
+        z-index: 2;
+        width: 0;
+        height: 0;
+        transform: translateX(-50%);
+        border-top: 30px solid var(--gold);
+        border-right: 16px solid transparent;
+        border-left: 16px solid transparent;
+        filter: drop-shadow(0 3px 4px rgba(0, 0, 0, .4));
+      }
+
+      .wheel-frame {
+        position: absolute;
+        inset: 0;
+        padding: 12px;
+        border-radius: 50%;
+        background: var(--gold);
+        box-shadow: 0 0 0 5px rgba(189, 139, 61, .12), 0 12px 34px rgba(74, 43, 34, .2);
+      }
+
+      .wheel {
+        display: block;
+        width: 100%;
+        height: 100%;
+        overflow: visible;
+        border-radius: 50%;
+        transition: transform 5s cubic-bezier(.12, .76, .1, 1);
+      }
+
+      .bulb {
+        position: absolute;
+        z-index: 1;
+        width: 10px;
+        height: 10px;
+        transform: translate(-50%, -50%);
+        border-radius: 50%;
+        background: var(--cream);
+        box-shadow: 0 0 10px rgba(189, 139, 61, .7);
+        animation: twinkle 1.2s ease-in-out infinite alternate;
+      }
+
+      @keyframes twinkle {
+        to { opacity: .45; transform: translate(-50%, -50%) scale(.72); }
+      }
+
+      .spin-button {
+        margin-top: 40px;
+        padding: 16px 48px;
+        border: 0;
+        border-radius: 999px;
+        border: 1px solid var(--gold);
+        background: var(--red);
+        color: var(--cream);
+        box-shadow: 0 8px 22px rgba(157, 48, 56, .2);
+        cursor: pointer;
+        font: 700 1.125rem "Outfit", sans-serif;
+        transition: transform .2s ease, opacity .2s ease;
+      }
+
+      .spin-button:hover:not(:disabled) { transform: scale(1.05); }
+      .spin-button:disabled { cursor: wait; opacity: .7; }
+      .spin-button:focus-visible { outline: 3px solid var(--green); outline-offset: 4px; }
+
+      .result {
+        position: fixed;
+        inset: 0;
+        z-index: 5;
+        display: grid;
+        place-items: center;
+        padding: 20px;
+        background: rgba(50, 28, 23, .72);
+      }
+
+      .result[hidden] { display: none; }
+
+      .welcome {
+        position: fixed;
+        inset: 0;
+        z-index: 10;
+        display: grid;
+        place-items: center;
+        padding: 22px;
+        background: rgba(35, 19, 15, .78);
+        backdrop-filter: blur(7px);
+      }
+
+      .welcome[hidden] { display: none; }
+
+      .welcome-card {
+        width: min(100%, 520px);
+        padding: clamp(32px, 8vw, 58px) clamp(22px, 7vw, 48px);
+        border: 1px solid var(--gold);
+        border-radius: 28px;
+        background:
+          linear-gradient(rgba(74, 43, 34, .88), rgba(50, 28, 23, .94)),
+          url("fundo natal-cacau-show.jfif") center / cover no-repeat;
+        box-shadow: 0 24px 80px rgba(0, 0, 0, .4);
+        text-align: center;
+      }
+
+      .welcome-card p {
+        margin: 0 0 26px;
+        color: var(--cream);
+        font: 800 clamp(1.8rem, 7vw, 2.8rem)/1.16 "Fraunces", Georgia, serif;
+        letter-spacing: .035em;
+        text-wrap: balance;
+      }
+
+      .welcome-button {
+        padding: 13px 28px;
+        border: 1px solid var(--gold);
+        border-radius: 999px;
+        background: var(--gold);
+        color: var(--chocolate-deep);
+        cursor: pointer;
+        font: 700 1rem "Outfit", sans-serif;
+        transition: transform .2s ease;
+      }
+
+      .welcome-button:hover { transform: translateY(-2px); }
+      .welcome-button:focus-visible { outline: 3px solid var(--cream); outline-offset: 4px; }
+
+      .result-card {
+        width: min(100%, 400px);
+        padding: 34px 24px;
+        border: 1px solid rgba(189, 139, 61, .65);
+        border-radius: 24px;
+        background: var(--cream);
+        box-shadow: 0 18px 60px rgba(0, 0, 0, .35);
+      }
+
+      .result-card p { margin: 0; color: var(--green); }
+      .result-card h2 {
+        margin: 12px 0 24px;
+        font: 800 2rem "Fraunces", Georgia, serif;
+        color: var(--chocolate);
+      }
+
+      .close-button {
+        padding: 10px 24px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--chocolate);
+        color: var(--cream);
+        cursor: pointer;
+        font: 600 1rem "Outfit", sans-serif;
+      }
+
+      @media (max-width: 420px) {
+        main { padding-top: 96px; }
+        .brand-logo { top: 14px; left: 16px; width: min(124px, 34vw); }
+        .title-panel { padding: 28px 12px; }
+        .wheel-wrap { margin-top: 34px; }
+        .spin-button { margin-top: 32px; }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *, *::before, *::after {
+          scroll-behavior: auto !important;
+          animation-duration: .01ms !important;
+          animation-iteration-count: 1 !important;
+        }
+        .wheel { transition-duration: .01ms; }
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <div id="snow" aria-hidden="true"></div>
+      <div id="chocolate-rain" aria-hidden="true"></div>
+      <img
+        class="brand-logo"
+        src="logo_marca_cacau_show-removebg-preview.png"
+        alt="Cacau Show"
+      >
+      <section class="content" aria-labelledby="title">
+        <div class="title-panel">
+          <p class="eyebrow">Especial de Natal</p>
+          <h1 id="title">Gire a roleta e <span>ganhe</span> seu presente</h1>
+        </div>
+        <p class="intro">Uma chance por pessoa. Descubra o que o Papai Noel separou para você.</p>
+
+        <div class="wheel-wrap" aria-label="Roleta com seis prêmios">
+          <div class="pointer" aria-hidden="true"></div>
+          <div class="wheel-frame">
+            <div id="bulbs" aria-hidden="true"></div>
+            <svg id="wheel" class="wheel" viewBox="0 0 300 300" role="img" aria-label="Prêmios 1 a 6">
+              <g>
+                <path d="M150 150 L150 0 A150 150 0 0 1 279.904 75 Z" fill="var(--wheel-a)" stroke="var(--gold)" stroke-width="2"/>
+                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(30 150 150)">Prêmio 1</text>
+              </g>
+              <g>
+                <path d="M150 150 L279.904 75 A150 150 0 0 1 279.904 225 Z" fill="var(--wheel-b)" stroke="var(--gold)" stroke-width="2"/>
+                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(90 150 150)">Prêmio 2</text>
+              </g>
+              <g>
+                <path d="M150 150 L279.904 225 A150 150 0 0 1 150 300 Z" fill="var(--wheel-c)" stroke="var(--gold)" stroke-width="2"/>
+                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(150 150 150)">Prêmio 3</text>
+              </g>
+              <g>
+                <path d="M150 150 L150 300 A150 150 0 0 1 20.096 225 Z" fill="var(--wheel-a)" stroke="var(--gold)" stroke-width="2"/>
+                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(210 150 150)">Prêmio 4</text>
+              </g>
+              <g>
+                <path d="M150 150 L20.096 225 A150 150 0 0 1 20.096 75 Z" fill="var(--wheel-b)" stroke="var(--gold)" stroke-width="2"/>
+                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(270 150 150)">Prêmio 5</text>
+              </g>
+              <g>
+                <path d="M150 150 L20.096 75 A150 150 0 0 1 150 0 Z" fill="var(--wheel-c)" stroke="var(--gold)" stroke-width="2"/>
+                <text x="150" y="38" fill="var(--cream)" font-size="15" font-weight="700" text-anchor="middle" transform="rotate(330 150 150)">Prêmio 6</text>
+              </g>
+              <circle cx="150" cy="150" r="26" fill="var(--chocolate-deep)" stroke="var(--gold)" stroke-width="4"/>
+              <text x="150" y="157" text-anchor="middle" font-size="20">🎄</text>
+            </svg>
+          </div>
+        </div>
+
+        <button id="spin" class="spin-button" type="button">GIRAR ROLETA</button>
+      </section>
+    </main>
+
+    <section id="result" class="result" role="dialog" aria-modal="true" aria-labelledby="result-title" hidden>
+      <div class="result-card">
+        <p>🎄 Parabéns! 🎄</p>
+        <h2 id="result-title"></h2>
+        <button id="close-result" class="close-button" type="button">Fechar</button>
+      </div>
+    </section>
+
+    <section id="welcome" class="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-message">
+      <div class="welcome-card">
+        <p id="welcome-message">NATAL CACAU SHOW-VOCE FAZ PARTE DO NOSSO NATAL</p>
+        <button id="welcome-button" class="welcome-button" type="button">Entrar na celebração</button>
+      </div>
+    </section>
+
+    <script>
+      const prizeCount = 6;
+      const wheel = document.querySelector("#wheel");
+      const spinButton = document.querySelector("#spin");
+      const result = document.querySelector("#result");
+      const resultTitle = document.querySelector("#result-title");
+      const closeResult = document.querySelector("#close-result");
+      const welcome = document.querySelector("#welcome");
+      const welcomeButton = document.querySelector("#welcome-button");
+
+      for (let i = 0; i < 24; i += 1) {
+        const snowflake = document.createElement("span");
+        snowflake.className = "snow";
+        snowflake.style.left = `${(i * 37 + 3) % 100}%`;
+        snowflake.style.setProperty("--size", `${4 + (i % 4) * 2}px`);
+        snowflake.style.setProperty("--duration", `${8 + (i % 7)}s`);
+        snowflake.style.setProperty("--delay", `${-((i * 3) % 9)}s`);
+        document.querySelector("#snow").append(snowflake);
+
+        const bulb = document.createElement("span");
+        const angle = (i / 24) * Math.PI * 2;
+        bulb.className = "bulb";
+        bulb.style.left = `${50 + Math.cos(angle) * 50}%`;
+        bulb.style.top = `${50 + Math.sin(angle) * 50}%`;
+        bulb.style.animationDelay = `${i % 2 ? ".6s" : "0s"}`;
+        document.querySelector("#bulbs").append(bulb);
+      }
+
+      for (let i = 0; i < 12; i += 1) {
+        const chocolate = document.createElement("img");
+        chocolate.className = "chocolate";
+        chocolate.src = "chocolate-fall.png";
+        chocolate.alt = "";
+        chocolate.draggable = false;
+        chocolate.style.setProperty("--left", `${(i * 43 + 7) % 100}%`);
+        chocolate.style.setProperty("--size", `${68 + (i % 3) * 16}px`);
+        chocolate.style.setProperty("--duration", `${12 + (i % 5) * 2}s`);
+        chocolate.style.setProperty("--delay", `${-((i * 4) % 16)}s`);
+        chocolate.style.setProperty("--drift", `${(i % 2 ? 1 : -1) * (20 + (i % 4) * 12)}px`);
+        document.querySelector("#chocolate-rain").append(chocolate);
+      }
+
+      welcomeButton.focus();
+      welcomeButton.addEventListener("click", () => {
+        welcome.hidden = true;
+        spinButton.focus();
+      });
+
+      spinButton.addEventListener("click", () => {
+        const winningPrize = Math.floor(Math.random() * prizeCount);
+        const sectionSize = 360 / prizeCount;
+        const prizeCenter = winningPrize * sectionSize + sectionSize / 2;
+        const rotation = 360 * 5 + (360 - prizeCenter);
+        spinButton.disabled = true;
+        wheel.style.transform = `rotate(${rotation}deg)`;
+
+        window.setTimeout(() => {
+          resultTitle.textContent = `Você ganhou o Prêmio ${winningPrize + 1}!`;
+          result.hidden = false;
+          closeResult.focus();
+          spinButton.disabled = false;
+        }, 5100);
+      });
+
+      closeResult.addEventListener("click", () => {
+        result.hidden = true;
+        spinButton.focus();
+      });
+
+      result.addEventListener("click", (event) => {
+        if (event.target === result) {
+          result.hidden = true;
+          spinButton.focus();
+        }
+      });
+
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && !result.hidden) {
+          result.hidden = true;
+          spinButton.focus();
+        }
+      });
+    </script>
+  </body>
+</html>
