@@ -262,8 +262,10 @@
       .welcome[hidden] { display: none; }
 
       .welcome-card {
+        position: relative;
         width: min(100%, 520px);
-        padding: clamp(32px, 8vw, 58px) clamp(22px, 7vw, 48px);
+        margin-top: 54px;
+        padding: clamp(92px, 18vw, 112px) clamp(22px, 7vw, 48px) clamp(32px, 8vw, 58px);
         border: 1px solid var(--gold);
         border-radius: 28px;
         background:
@@ -271,6 +273,20 @@
           url("fundo natal-cacau-show.jfif") center / cover no-repeat;
         box-shadow: 0 24px 80px rgba(0, 0, 0, .4);
         text-align: center;
+      }
+
+      .welcome-rabbit {
+        position: absolute;
+        top: 0;
+        left: 50%;
+        width: min(150px, 42vw);
+        aspect-ratio: 1;
+        object-fit: cover;
+        transform: translate(-50%, -50%);
+        border: 2px solid var(--gold);
+        border-radius: 18px;
+        background: #464952;
+        box-shadow: 0 10px 26px rgba(0, 0, 0, .38);
       }
 
       .welcome-card p {
@@ -474,6 +490,11 @@
 
     <section id="welcome" class="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-message">
       <div class="welcome-card">
+        <img
+          class="welcome-rabbit"
+          src="coelho cacau show.jfif"
+          alt="Coelho da Cacau Show"
+        >
         <p id="welcome-message">NATAL CACAU SHOW-VOCE FAZ PARTE DO NOSSO NATAL</p>
         <button id="welcome-button" class="welcome-button" type="button">Entrar na celebração</button>
       </div>
