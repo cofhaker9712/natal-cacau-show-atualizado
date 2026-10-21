@@ -1,0 +1,182 @@
+.delivery-step h3 {
+  margin: 0;
+  color: var(--cream);
+  font: 700 1.45rem "Fraunces", Georgia, serif;
+}
+
+.delivery-intro {
+  margin: 7px 0 12px;
+  color: #f0e4d4;
+  font-size: .9rem;
+}
+
+.delivery-privacy,
+.delivery-warning {
+  margin: 0 0 16px;
+  padding: 11px 12px;
+  border: 1px solid rgba(189, 139, 61, .45);
+  border-radius: 12px;
+  color: #f0e4d4;
+  background: rgba(50, 28, 23, .42);
+  font-size: .78rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.delivery-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  text-align: left;
+}
+
+.delivery-field {
+  min-width: 0;
+}
+
+.delivery-field--full {
+  grid-column: 1 / -1;
+}
+
+.delivery-field label {
+  display: block;
+  margin: 0 0 5px 2px;
+  color: var(--cream);
+  font-size: .78rem;
+  font-weight: 600;
+}
+
+.delivery-field label span {
+  color: #d9c8af;
+  font-weight: 400;
+}
+
+.delivery-field input,
+.delivery-field select {
+  width: 100%;
+  min-height: 42px;
+  padding: 9px 11px;
+  border: 1px solid rgba(255, 250, 241, .3);
+  border-radius: 9px;
+  outline: none;
+  color: var(--cream);
+  background: #684332;
+  font: 400 .82rem "Outfit", sans-serif;
+}
+
+.delivery-field input::placeholder {
+  color: #d9c8af;
+}
+
+.delivery-field input:focus,
+.delivery-field select:focus {
+  border-color: #f0c66f;
+  box-shadow: 0 0 0 3px rgba(240, 198, 111, .16);
+}
+
+.delivery-field input[aria-invalid="true"],
+.delivery-field select[aria-invalid="true"] {
+  border-color: #f2a09d;
+}
+
+.delivery-field-hint {
+  display: block;
+  min-height: 0;
+  margin: 5px 2px 0;
+  color: #f0e4d4;
+  font-size: .7rem;
+  line-height: 1.4;
+}
+
+.delivery-message {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border: 1px solid rgba(242, 160, 157, .4);
+  border-radius: 9px;
+  color: #ffe2de;
+  background: rgba(157, 48, 56, .25);
+  font-size: .8rem;
+  line-height: 1.45;
+  text-align: left;
+}
+
+.delivery-submit,
+.edit-delivery-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 16px;
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  color: var(--cream);
+  background: var(--green);
+  cursor: pointer;
+  font: 700 .95rem "Outfit", sans-serif;
+}
+
+.delivery-submit:hover,
+.edit-delivery-button:hover {
+  filter: brightness(1.08);
+}
+
+.delivery-submit:focus-visible,
+.edit-delivery-button:focus-visible {
+  outline: 3px solid var(--cream);
+  outline-offset: 3px;
+}
+
+.delivery-warning {
+  margin-top: 14px;
+}
+
+.edit-delivery-button {
+  margin: 0 0 12px;
+  border-color: rgba(255, 250, 241, .3);
+  background: transparent;
+  font-size: .82rem;
+}
+
+.checkout-step .checkout-button {
+  display: block;
+}
+
+.checkout-step .checkout-button:disabled {
+  cursor: wait;
+}
+
+.checkout-step[hidden],
+.delivery-step[hidden] {
+  display: none;
+}
+
+@media (max-width: 480px) {
+  .result {
+    padding: 12px;
+  }
+
+  .result-card {
+    max-height: calc(100vh - 24px);
+    padding: 24px 16px;
+  }
+
+  .delivery-grid {
+    gap: 10px;
+  }
+
+  .delivery-field input,
+  .delivery-field select {
+    min-height: 44px;
+    padding-right: 8px;
+    padding-left: 8px;
+    font-size: .76rem;
+  }
+}
+
+@media (max-width: 350px) {
+  .delivery-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .delivery-field--full {
+    grid-column: auto;
+  }
+}
