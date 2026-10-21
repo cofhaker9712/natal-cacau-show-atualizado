@@ -311,7 +311,70 @@
         color: var(--chocolate);
       }
 
+      .checkout-button {
+        width: 100%;
+        padding: 13px 16px;
+        border: 1px solid var(--gold);
+        border-radius: 999px;
+        background: var(--red);
+        color: var(--cream);
+        cursor: pointer;
+        font: 700 1rem "Outfit", sans-serif;
+      }
+
+      .checkout-button:disabled { cursor: wait; opacity: .7; }
+
+      .payment-details {
+        margin-top: 18px;
+        padding: 16px;
+        border: 1px solid rgba(189, 139, 61, .55);
+        border-radius: 16px;
+        background: #fff;
+      }
+
+      .payment-details[hidden] { display: none; }
+
+      .payment-status {
+        margin: 0 0 12px;
+        color: var(--chocolate);
+        font-size: .95rem;
+        line-height: 1.45;
+      }
+
+      .payment-qr {
+        display: block;
+        width: min(100%, 220px);
+        height: auto;
+        margin: 0 auto 12px;
+        image-rendering: pixelated;
+      }
+
+      .pix-code {
+        display: block;
+        width: 100%;
+        min-height: 72px;
+        padding: 10px;
+        border: 1px solid rgba(74, 43, 34, .24);
+        border-radius: 10px;
+        color: var(--chocolate);
+        font: .8rem/1.4 monospace;
+        resize: vertical;
+      }
+
+      .copy-pix-button {
+        width: 100%;
+        margin-top: 10px;
+        padding: 11px 16px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--green);
+        color: var(--cream);
+        cursor: pointer;
+        font: 600 .95rem "Outfit", sans-serif;
+      }
+
       .close-button {
+        margin-top: 16px;
         padding: 10px 24px;
         border: 0;
         border-radius: 999px;
@@ -398,6 +461,13 @@
       <div class="result-card">
         <p>🎄 Parabéns! 🎄</p>
         <h2 id="result-title"></h2>
+        <button id="checkout" class="checkout-button" type="button">Comprar chocolates por R$ 29,90 — gerar PIX</button>
+        <div id="payment-details" class="payment-details" hidden>
+          <p id="payment-status" class="payment-status" role="status" aria-live="polite"></p>
+          <img id="payment-qr" class="payment-qr" alt="QR Code PIX para pagamento" hidden>
+          <textarea id="pix-code" class="pix-code" aria-label="Código PIX copia e cola" readonly hidden></textarea>
+          <button id="copy-pix" class="copy-pix-button" type="button" hidden>Copiar código PIX</button>
+        </div>
         <button id="close-result" class="close-button" type="button">Fechar</button>
       </div>
     </section>
@@ -416,6 +486,12 @@
       const result = document.querySelector("#result");
       const resultTitle = document.querySelector("#result-title");
       const closeResult = document.querySelector("#close-result");
+      const checkoutButton = document.querySelector("#checkout");
+      const paymentDetails = document.querySelector("#payment-details");
+      const paymentStatus = document.querySelector("#payment-status");
+      const paymentQr = document.querySelector("#payment-qr");
+      const pixCode = document.querySelector("#pix-code");
+      const copyPixButton = document.querySelector("#copy-pix");
       const welcome = document.querySelector("#welcome");
       const welcomeButton = document.querySelector("#welcome-button");
 
@@ -467,10 +543,69 @@
 
         window.setTimeout(() => {
           resultTitle.textContent = `Você ganhou o Prêmio ${winningPrize + 1}!`;
+          checkoutButton.hidden = false;
+          checkoutButton.disabled = false;
+          checkoutButton.textContent = "Comprar chocolates por R$ 29,90 — gerar PIX";
+          paymentDetails.hidden = true;
+          paymentQr.hidden = true;
+          pixCode.hidden = true;
+          copyPixButton.hidden = true;
           result.hidden = false;
           closeResult.focus();
           spinButton.disabled = false;
         }, 5100);
+      });
+
+      checkoutButton.addEventListener("click", async () => {
+        checkoutButton.disabled = true;
+        checkoutButton.textContent = "Gerando PIX...";
+        paymentDetails.hidden = false;
+        paymentStatus.textContent = "Estamos criando a cobrança PIX...";
+        paymentQr.hidden = true;
+        pixCode.hidden = true;
+        copyPixButton.hidden = true;
+
+        try {
+          const response = await fetch("/api/create-payment", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({}),
+          });
+          const payment = await response.json();
+
+          if (!response.ok) {
+            if (payment.code === "CHECKOUT_DISABLED" || payment.code === "CHECKOUT_NOT_CONFIGURED") {
+              throw new Error("O pagamento ainda não está configurado. Tente novamente mais tarde.");
+            }
+            throw new Error(payment.error || "Não foi possível gerar o PIX. Tente novamente.");
+          }
+
+          paymentQr.src = payment.qrCodeBase64;
+          paymentQr.hidden = false;
+          pixCode.value = payment.copyPaste;
+          pixCode.hidden = false;
+          copyPixButton.hidden = false;
+          paymentStatus.textContent = "Escaneie o QR Code ou copie o código PIX para pagar R$ 29,90 pelos chocolates. Esta página ainda não exibe a confirmação do pagamento.";
+          checkoutButton.textContent = "PIX gerado";
+        } catch (error) {
+          paymentStatus.textContent = error instanceof Error
+            ? error.message
+            : "Erro inesperado ao gerar o PIX. Tente novamente.";
+          checkoutButton.disabled = false;
+          checkoutButton.textContent = "Tentar gerar PIX novamente";
+        }
+      });
+
+      copyPixButton.addEventListener("click", async () => {
+        try {
+          await navigator.clipboard.writeText(pixCode.value);
+          paymentStatus.textContent = "Código PIX copiado. Abra o aplicativo do seu banco para concluir o pagamento.";
+        } catch (error) {
+          console.error("Could not copy PIX code", error);
+          paymentStatus.textContent = "Não foi possível copiar automaticamente. Selecione o código PIX e copie manualmente.";
+          pixCode.focus();
+          pixCode.select();
+        }
       });
 
       closeResult.addEventListener("click", () => {
