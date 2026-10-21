@@ -596,7 +596,7 @@
 
       spinButton.addEventListener("click", () => {
         const winningPrize = Math.floor(Math.random() * prizeCount);
-        const prizeCenter = winningPrize * sectionSize + sectionSize / 2;
+        const prizeCenter = winningPrize * sectorSize + sectorSize / 2;
         const rotation = 360 * 5 + (360 - prizeCenter);
         spinButton.disabled = true;
         wheel.style.transform = `rotate(${rotation}deg)`;
