@@ -261,6 +261,17 @@
 
       .welcome[hidden] { display: none; }
 
+      .welcome-logo {
+        position: fixed;
+        top: 18px;
+        left: 22px;
+        z-index: 11;
+        display: block;
+        width: min(150px, 34vw);
+        height: auto;
+        filter: drop-shadow(0 3px 10px rgba(0, 0, 0, .35));
+      }
+
       .welcome-card {
         position: relative;
         width: min(100%, 520px);
@@ -406,6 +417,7 @@
       @media (max-width: 420px) {
         main { padding-top: 96px; }
         .brand-logo { top: 14px; left: 16px; width: min(124px, 34vw); }
+        .welcome-logo { top: 14px; left: 16px; width: min(124px, 34vw); }
         .title-panel { padding: 28px 12px; }
         .wheel-wrap { margin-top: 34px; }
         .spin-button { margin-top: 32px; }
@@ -469,6 +481,11 @@
     </section>
 
     <section id="welcome" class="welcome" role="dialog" aria-modal="true" aria-labelledby="welcome-message">
+      <img
+        class="welcome-logo"
+        src="logo-cacau-show-natal.png"
+        alt="Cacau Show"
+      >
       <div class="welcome-card">
         <img
           class="welcome-rabbit"
